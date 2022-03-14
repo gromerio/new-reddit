@@ -1,7 +1,14 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 
-const NODE_ENV = process.env.NODE_ENV
+const NODE_ENV = process.env.NODE_ENV;
+const IS_DEV = NODE_ENV === 'development';
+const IS_PROD = NODE_ENV === 'production';
+
+function setupDevtool() {
+    if (IS_DEV) return 'eval';
+    if (IS_PROD) return false;
+}
 
 module.exports = {
     resolve: {
@@ -21,5 +28,11 @@ module.exports = {
     },
     plugins: [
         new HTMLWebpackPlugin({ template: path.resolve(__dirname, 'index.html') })
-    ]
+    ],
+    devServer: {
+        port: 3000,
+        open: true,
+        hot: IS_DEV
+    },
+    devtool: setupDevtool()
 };
